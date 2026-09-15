@@ -1,0 +1,28 @@
+[
+  {
+    "report_id": "RPT-2026-001",
+    "language": "en",
+    "title": "APT28 Infrastructure Campaign Overview",
+    "text": "Threat actor APT28 deployed Cobalt Strike to compromise financial sector systems by exploiting CVE-2023-38831. Command and control communications were established via IP address 192.168.1.50 and malicious domain darknet-malware.com with payload hash a1b2c3d4e5f67890a1b2c3d4e5f67890."
+  },
+  {
+    "report_id": "RPT-2026-002",
+    "language": "es",
+    "text": "El grupo Lazarus utilizó el malware RedLine Stealer para infectar servidores estatales usando la vulnerabilidad CVE-2021-44228 y conectándose al servidor C2 10.0.0.15."
+  },
+  {
+    "report_id": "RPT-2026-003",
+    "language": "ru",
+    "text": "Группировка Sandworm распространяет троян AgentTesla через вредоносный домен evil-update.ru и IP адрес 185.220.101.5 для скрытной кражи персональных данных."
+  },
+  {
+    "report_id": "RPT-2026-004",
+    "language": "zh",
+    "text": "黑客组织 APT41 利用零日漏洞 CVE-2024-1709 部署 PlugX 木马 攻击关键基础设施，并与 C2 域名 update-service.cn 以及 IP 45.33.32.156 进行通信。"
+  },
+  {
+    "report_id": "RPT-2026-005",
+    "language": "hi-en",
+    "text": "Attacker Kimsuky ne LockBit ransomware execute kiya aur CVE-2022-30190 exploit karke C2 IP 172.16.0.44 aur stealth-proxy.net ke sath connection banaya."
+  }
+]
