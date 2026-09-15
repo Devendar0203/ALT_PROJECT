@@ -1,0 +1,35 @@
+services:
+  # FastAPI Backend Service
+  - type: web
+    name: cybergraph-x-backend
+    env: python
+    buildCommand: pip install -r backend/requirements.txt -r ml/requirements.txt
+    startCommand: python -m uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: NEO4J_URI
+        sync: false
+      - key: NEO4J_USER
+        sync: false
+      - key: NEO4J_PASSWORD
+        sync: false
+      - key: API_KEY
+        value: cybergraphx_secret_key_2026
+      - key: CORS_ORIGINS
+        value: "*"
+
+  # React Frontend Static Site
+  - type: web
+    name: cybergraph-x-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: cybergraph-x-backend
+          property: url
+      - key: VITE_API_KEY
+        value: cybergraphx_secret_key_2026
