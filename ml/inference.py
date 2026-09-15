@@ -1,7 +1,12 @@
 import re
 import json
 import os
+import sys
 from pathlib import Path
+
+# Add project root to sys.path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from langdetect import detect, DetectorFactory
 
 # Set seed for deterministic language detection
@@ -132,16 +137,22 @@ def extract_entities(text: str) -> list:
     return entities
 
 
+from ml.relation_extractor import extract_relations
+
+
 def process_report(report: dict) -> dict:
     text = report.get("text", "")
     lang_info = detect_language_and_codemix(text)
     entities = extract_entities(text)
+    relations = extract_relations(text, entities)
     
     return {
         "report_id": report.get("report_id", "N/A"),
         "language_analysis": lang_info,
         "entity_count": len(entities),
-        "entities": entities
+        "entities": entities,
+        "relation_count": len(relations),
+        "relations": relations
     }
 
 
