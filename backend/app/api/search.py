@@ -7,14 +7,7 @@ router = APIRouter(prefix="", tags=["Search"])
 
 @router.get("/search")
 def search_threat_intel(q: str = Query(..., min_length=1, description="Search query string")) -> Dict[str, Any]:
-    query = q.lower().strip()
-    store = neo4j_service._in_memory_store
-
-    matched_nodes = []
-    for nid, node in store["nodes"].items():
-        if query in node["label"].lower() or query in nid.lower() or query in str(node.get("properties", {})).lower():
-            matched_nodes.append(node)
-
+    matched_nodes = neo4j_service.search_nodes(q)
     return {
         "query": q,
         "total_matches": len(matched_nodes),

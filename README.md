@@ -77,16 +77,15 @@ cd frontend
 npm install
 ```
 
-### 3. Running Locally
+### 3. Running Locally (Single Command)
+Run both the FastAPI backend and React frontend dev server simultaneously with one command from the project root:
 ```bash
-# Terminal 1: Start FastAPI Backend (Port 8000)
-python -m uvicorn backend.app.main:app --reload --port 8000
-
-# Terminal 2: Start React Frontend Dev Server (Port 5173)
-cd frontend
 npm run dev
+# OR double-click start.bat on Windows
 ```
-Open your browser at `http://localhost:5173`.
+- **React Dashboard:** `http://localhost:5173`
+- **FastAPI Backend:** `http://localhost:8000/api/v1/health`
+- **Swagger Docs:** `http://localhost:8000/docs`
 
 ---
 

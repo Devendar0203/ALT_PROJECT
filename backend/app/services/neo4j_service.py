@@ -216,4 +216,58 @@ class Neo4jService:
         ]
 
 
+    def search_nodes(self, query: str) -> List[Dict[str, Any]]:
+        """
+        Search nodes across Neo4j Aura using case-insensitive partial match on name, id, or type.
+        """
+        q = query.strip().lower()
+        if not q:
+            return []
+
+        driver = self.get_driver()
+        if driver:
+            try:
+                with driver.session() as session:
+                    cypher = """
+                    MATCH (n)
+                    WHERE toLower(coalesce(n.name, n.id, '')) CONTAINS $q
+                       OR toLower(coalesce(n.type, '')) CONTAINS $q
+                       OR any(label IN labels(n) WHERE toLower(label) CONTAINS $q)
+                    RETURN n, labels(n) AS node_labels LIMIT 50
+                    """
+                    result = session.run(cypher, q=q)
+                    matches = []
+                    for record in result:
+                        node = record["n"]
+                        labels = record["node_labels"]
+                        node_type = node.get("type", labels[0] if labels else "Entity")
+                        node_name = node.get("name", node.get("id", "Unknown"))
+                        matches.append({
+                            "id": f"{node_type}:{node_name}",
+                            "label": node_name,
+                            "type": node_type,
+                            "properties": dict(node)
+                        })
+                    if matches:
+                        return matches
+            except Exception as e:
+                logger.warning(f"Neo4j search Cypher query warning: {e}")
+
+        # Fallback / In-Memory Store Search (Case-insensitive partial match)
+        results = []
+        seen = set()
+        for nid, node in self._in_memory_store["nodes"].items():
+            label = str(node.get("label", "")).lower()
+            ntype = str(node.get("type", "")).lower()
+            nid_str = str(nid).lower()
+            props_str = str(node.get("properties", {})).lower()
+
+            if q in label or q in ntype or q in nid_str or q in props_str:
+                if nid not in seen:
+                    seen.add(nid)
+                    results.append(node)
+
+        return results
+
+
 neo4j_service = Neo4jService()

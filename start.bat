@@ -1,0 +1,3 @@
+@echo off
+echo Starting CyberGraph-X (FastAPI Backend + React Frontend)...
+npm run dev
