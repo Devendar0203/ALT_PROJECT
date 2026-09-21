@@ -1,22 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
 :root {
-  --opencti-bg: #070b12;
-  --opencti-sidebar: #0b111e;
-  --opencti-header: #0d1526;
-  --opencti-card: #10192d;
-  --opencti-card-hover: #16223d;
-  --opencti-border: #1b2842;
-  --opencti-border-subtle: rgba(255, 255, 255, 0.08);
+  --opencti-bg: #050811;
+  --opencti-sidebar: #080d1a;
+  --opencti-header: #0a1224;
+  --opencti-card: #0d162c;
+  --opencti-card-hover: #121e3a;
+  --opencti-border: #182645;
+  --opencti-border-subtle: rgba(255, 255, 255, 0.07);
   
   --opencti-primary: #0284c7;
-  --opencti-cyan: #00b4d8;
+  --opencti-cyan: #38bdf8;
   --opencti-blue-hover: #0369a1;
   
   --text-primary: #f8fafc;
-  --text-secondary: #8b9cb0;
-  --text-muted: #57687c;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
   
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, monospace;
 }
 
 * {
@@ -27,6 +29,9 @@
 
 body {
   background-color: var(--opencti-bg);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.04) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(147, 51, 234, 0.03) 0px, transparent 50%);
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 13px;
@@ -56,11 +61,11 @@ body {
   background: var(--opencti-bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1b2842;
+  background: #182645;
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2a3d60;
+  background: #253963;
 }
 
 /* Layout Grid & Containers */
@@ -100,6 +105,7 @@ body {
   align-items: center;
   gap: 12px;
   border-bottom: 1px solid var(--opencti-border);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-brand-icon {
@@ -113,6 +119,7 @@ body {
   color: #ffffff;
   font-weight: 700;
   font-size: 13px;
+  box-shadow: 0 0 12px rgba(2, 132, 199, 0.4);
 }
 
 .sidebar-brand-title {
@@ -120,6 +127,7 @@ body {
   font-size: 15px;
   color: #ffffff;
   letter-spacing: -0.3px;
+  font-family: var(--font-sans);
 }
 
 .sidebar-brand-version {
@@ -153,6 +161,7 @@ body {
   color: var(--text-secondary);
   font-size: 12px;
   font-weight: 500;
+  font-family: var(--font-sans);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -166,7 +175,7 @@ body {
   background-color: #0284c7;
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+  box-shadow: 0 2px 10px rgba(2, 132, 199, 0.35);
 }
 
 /* OpenCTI Header */
@@ -194,18 +203,20 @@ body {
 
 .header-search-input {
   width: 100%;
-  background-color: #050912;
+  background-color: #040710;
   border: 1px solid var(--opencti-border);
   border-radius: 6px;
   padding: 7px 12px 7px 34px;
   color: var(--text-primary);
   font-size: 12px;
+  font-family: var(--font-sans);
   outline: none;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .header-search-input:focus {
   border-color: var(--opencti-cyan);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.15);
 }
 
 .header-telemetry {
@@ -221,7 +232,7 @@ body {
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.4);
   border: 1px solid var(--opencti-border);
   border-radius: 4px;
   color: var(--text-secondary);
@@ -233,11 +244,12 @@ body {
   border: 1px solid var(--opencti-border);
   border-radius: 8px;
   padding: 16px;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
 }
 
 .panel-card:hover {
   border-color: rgba(255, 255, 255, 0.15);
+  background-color: var(--opencti-card-hover);
 }
 
 .panel-header {
@@ -255,12 +267,14 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--text-primary);
+  font-family: var(--font-sans);
 }
 
 .panel-subtitle {
   font-size: 11px;
   color: var(--text-secondary);
   margin-top: 2px;
+  font-family: var(--font-sans);
 }
 
 /* Buttons & Controls */
@@ -289,6 +303,7 @@ body {
   background-color: #0284c7;
   border-color: #0369a1;
   color: #ffffff;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
 }
 
 .cta-btn-primary:hover {
@@ -327,6 +342,6 @@ body {
 }
 
 /* Badges */
-.badge-critical { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
-.badge-high { background: rgba(249, 115, 22, 0.12); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
-.badge-success { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+.badge-critical { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; font-family: var(--font-mono); }
+.badge-high { background: rgba(249, 115, 22, 0.12); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; font-family: var(--font-mono); }
+.badge-success { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; font-family: var(--font-mono); }
