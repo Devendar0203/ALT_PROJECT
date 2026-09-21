@@ -1,32 +1,45 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Sidebar from './Sidebar';
 import Header from './Header';
 
 export default function Layout({ activeTab, setActiveTab, children, healthStatus }) {
-  const [collapsed, setCollapsed] = useState(false);
-
   return (
-    <div className="min-h-screen bg-[#070d19] text-slate-100 flex font-sans antialiased">
-      {/* Left Collapsible Vertical Sidebar */}
+    <div className="app-container">
+      {/* Left Sidebar */}
       <Sidebar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
-        collapsed={collapsed} 
-        setCollapsed={setCollapsed} 
       />
 
       {/* Main Content Workspace Column */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top OpenCTI Header */}
+      <div className="main-column">
+        {/* Top Header */}
         <Header 
           activeTab={activeTab} 
+          healthStatus={healthStatus} 
           onIngestClick={() => setActiveTab('ingest')} 
         />
 
-        {/* Full-bleed Content Workspace */}
-        <main className="flex-1 overflow-x-hidden flex flex-col">
+        {/* Content Area */}
+        <main style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>
           {children}
         </main>
+
+        {/* Footer Bar */}
+        <footer style={{ backgroundColor: 'var(--opencti-header)', borderTop: '1px solid var(--opencti-border)', padding: '10px 24px', fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', display: 'flex', justify: 'space-between', alignItems: 'center' }}>
+          <div>CYBERGRAPH-X CTIP PLATFORM — STRICT PARAMETERIZED CYPHER ENGINE</div>
+          <div>
+            SWAGGER API DOCS:{' '}
+            <a 
+              href="http://localhost:8000/docs" 
+              target="_blank" 
+              rel="noreferrer" 
+              style={{ color: '#38bdf8', textDecoration: 'none' }}
+            >
+              http://localhost:8000/docs
+            </a>
+          </div>
+        </footer>
       </div>
     </div>
   );

@@ -1,10 +1,10 @@
-@import "tailwindcss";
-
 :root {
-  --opencti-bg: #070d19;
-  --opencti-surface: #0b1320;
-  --opencti-panel: #0f1a2c;
-  --opencti-border: #1b2a40;
+  --opencti-bg: #070b12;
+  --opencti-sidebar: #0b111e;
+  --opencti-header: #0d1526;
+  --opencti-card: #10192d;
+  --opencti-card-hover: #16223d;
+  --opencti-border: #1b2842;
   --opencti-border-subtle: rgba(255, 255, 255, 0.08);
   
   --opencti-primary: #0284c7;
@@ -21,11 +21,11 @@
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  padding: 0;
   background-color: var(--opencti-bg);
   color: var(--text-primary);
   font-family: var(--font-sans);
@@ -56,34 +56,223 @@ body {
   background: var(--opencti-bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1b2a40;
+  background: #1b2842;
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2a3c58;
+  background: #2a3d60;
 }
 
-/* OpenCTI Panel & Cards */
-.opencti-panel {
-  background-color: var(--opencti-panel);
-  border: 1px solid var(--opencti-border);
-  border-radius: 6px;
+/* Layout Grid & Containers */
+.app-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  background-color: var(--opencti-bg);
 }
 
-.opencti-sidebar {
-  background-color: var(--opencti-surface);
+.main-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* OpenCTI Sidebar */
+.sidebar-container {
+  width: 240px;
+  height: 100vh;
+  background-color: var(--opencti-sidebar);
   border-right: 1px solid var(--opencti-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  flex-shrink: 0;
 }
 
-.opencti-btn {
-  font-family: var(--font-sans);
+.sidebar-header {
+  height: 56px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--opencti-border);
+}
+
+.sidebar-brand-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background-color: #0284c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.sidebar-brand-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: #ffffff;
+  letter-spacing: -0.3px;
+}
+
+.sidebar-brand-version {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #38bdf8;
+  background-color: rgba(2, 132, 199, 0.15);
+  border: 1px solid rgba(2, 132, 199, 0.3);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.sidebar-nav {
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sidebar-nav-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background-color: transparent;
+  color: var(--text-secondary);
   font-size: 12px;
   font-weight: 500;
-  border-radius: 4px;
-  border: 1px solid var(--opencti-border);
-  background-color: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sidebar-nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.04);
   color: var(--text-primary);
-  padding: 5px 12px;
+}
+
+.sidebar-nav-btn.active {
+  background-color: #0284c7;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+}
+
+/* OpenCTI Header */
+.header-container {
+  height: 56px;
+  background-color: var(--opencti-header);
+  border-bottom: 1px solid var(--opencti-border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.header-search {
+  flex: 1;
+  max-width: 480px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.header-search-input {
+  width: 100%;
+  background-color: #050912;
+  border: 1px solid var(--opencti-border);
+  border-radius: 6px;
+  padding: 7px 12px 7px 34px;
+  color: var(--text-primary);
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.header-search-input:focus {
+  border-color: var(--opencti-cyan);
+}
+
+.header-telemetry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.telemetry-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--opencti-border);
+  border-radius: 4px;
+  color: var(--text-secondary);
+}
+
+/* Cards & Panel Layouts */
+.panel-card {
+  background-color: var(--opencti-card);
+  border: 1px solid var(--opencti-border);
+  border-radius: 8px;
+  padding: 16px;
+  transition: border-color 0.15s ease;
+}
+
+.panel-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--opencti-border);
+}
+
+.panel-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-primary);
+}
+
+.panel-subtitle {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* Buttons & Controls */
+.cta-btn {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--opencti-border);
+  background-color: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
   cursor: pointer;
   transition: all 0.15s ease;
   display: inline-flex;
@@ -91,64 +280,53 @@ body {
   gap: 6px;
 }
 
-.opencti-btn:hover {
+.cta-btn:hover {
   background-color: rgba(255, 255, 255, 0.08);
-  border-color: #2e4362;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
-.opencti-btn-primary {
+.cta-btn-primary {
   background-color: #0284c7;
   border-color: #0369a1;
   color: #ffffff;
 }
 
-.opencti-btn-primary:hover {
-  background-color: #00b4d8;
-  border-color: #0284c7;
+.cta-btn-primary:hover {
+  background-color: #0369a1;
+  border-color: #075985;
 }
 
-.opencti-input {
-  background-color: #060b14;
-  border: 1px solid var(--opencti-border);
-  border-radius: 4px;
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: 13px;
-  padding: 6px 12px;
-  outline: none;
-  transition: border-color 0.15s ease;
+/* Data Table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
 }
 
-.opencti-input:focus {
-  border-color: var(--opencti-cyan);
-}
-
-/* OpenCTI Graph Control Floating Toolbar */
-.graph-toolbar {
-  background-color: rgba(11, 19, 32, 0.95);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--opencti-border);
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-/* OpenCTI Subtabs */
-.opencti-subtab {
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  border-bottom: 2px solid transparent;
-  transition: all 0.15s ease;
-  cursor: pointer;
-}
-
-.opencti-subtab:hover {
-  color: var(--text-primary);
-}
-
-.opencti-subtab-active {
-  color: var(--text-primary);
+.data-table th {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: var(--text-muted);
   font-weight: 600;
-  border-bottom-color: var(--opencti-cyan);
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--opencti-border);
+  font-family: var(--font-mono);
 }
+
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+}
+
+.data-table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Badges */
+.badge-critical { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+.badge-high { background: rgba(249, 115, 22, 0.12); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+.badge-success { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }

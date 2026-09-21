@@ -1,77 +1,44 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
-  Home, 
   LayoutDashboard, 
-  Compass, 
-  Target, 
-  FileText, 
-  ChevronDown, 
-  ChevronRight, 
-  Briefcase, 
-  Calendar, 
-  Eye, 
-  Flame, 
-  Shield, 
-  Cpu, 
-  Users, 
-  MapPin, 
-  ChevronLeft, 
-  Layers,
-  Network
+  Network, 
+  Search, 
+  PlusCircle, 
+  ChevronRight,
+  User
 } from 'lucide-react';
 
-export default function Sidebar({ activeTab, setActiveTab, collapsed, setCollapsed }) {
-  const [analysesOpen, setAnalysesOpen] = useState(true);
-
+export default function Sidebar({ activeTab, setActiveTab }) {
   const navItems = [
-    { id: 'dashboard', label: 'Home', icon: Home },
-    { id: 'dashboard_overview', label: 'Dashboards', icon: LayoutDashboard },
-    { id: 'investigations', label: 'Investigations', icon: Compass },
-    { id: 'pir', label: 'PIR', icon: Target },
-  ];
-
-  const analysesSubItems = [
-    { id: 'reports', label: 'Reports', active: activeTab === 'search' },
-    { id: 'groupings', label: 'Groupings' },
-    { id: 'malware_analyses', label: 'Malware analyses' },
-    { id: 'security_coverages', label: 'Security coverages' },
-    { id: 'notes', label: 'Notes' },
-  ];
-
-  const bottomNavItems = [
-    { id: 'cases', label: 'Cases', icon: Briefcase },
-    { id: 'events', label: 'Events', icon: Calendar },
-    { id: 'observations', label: 'Observations', icon: Eye },
-    { id: 'explorer', label: 'Threats', icon: Flame },
-    { id: 'arsenal', label: 'Arsenal', icon: Shield },
-    { id: 'techniques', label: 'Techniques', icon: Cpu },
-    { id: 'entities', label: 'Entities', icon: Users },
-    { id: 'locations', label: 'Locations', icon: MapPin },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'explorer', label: 'Graph Explorer', icon: Network },
+    { id: 'search', label: 'Report Search', icon: Search },
+    { id: 'ingest', label: 'Ingest Studio', icon: PlusCircle }
   ];
 
   return (
-    <aside className={`h-screen bg-[#0b1320] border-r border-[#1b2a40] flex flex-col justify-between transition-all duration-200 sticky top-0 z-40 ${collapsed ? 'w-16' : 'w-60'}`}>
-      
-      {/* Top OpenCTI Brand */}
+    <aside className="sidebar-container">
+      {/* Brand Header */}
       <div>
-        <div className="h-14 px-4 flex items-center gap-3 border-b border-[#1b2a40]">
-          <div className="w-7 h-7 rounded bg-sky-600 flex items-center justify-center text-white font-bold text-sm shadow-sm shrink-0">
-            <Network size={18} />
+        <div className="sidebar-header">
+          <div className="sidebar-brand-icon">
+            <Network size={16} />
           </div>
-          {!collapsed && (
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-base tracking-tight text-white">
-                OpenCTI
-              </span>
-              <span className="text-[10px] font-mono text-sky-400 bg-sky-950/60 px-1.5 py-0.5 rounded border border-sky-800/40">
-                v6.5
-              </span>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span className="sidebar-brand-title">CyberGraph<span style={{ color: '#38bdf8' }}>-X</span></span>
+              <span className="sidebar-brand-version">v1.0</span>
             </div>
-          )}
+            <span style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 500 }}>Enterprise CTI</span>
+          </div>
         </div>
 
         {/* Navigation Items */}
-        <div className="py-3 px-2 space-y-0.5 overflow-y-auto max-h-[calc(100vh-110px)] text-xs">
+        <nav className="sidebar-nav">
+          <div style={{ padding: '4px 8px 8px 8px', fontSize: '10px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            Platform Workspace
+          </div>
+
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -79,93 +46,31 @@ export default function Sidebar({ activeTab, setActiveTab, collapsed, setCollaps
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-md font-medium transition-colors ${
-                  isActive
-                    ? 'bg-[#122035] text-white font-semibold border-l-2 border-sky-400'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-[#0f1a2c]'
-                }`}
-                title={collapsed ? item.label : undefined}
+                className={`sidebar-nav-btn ${isActive ? 'active' : ''}`}
               >
-                <Icon size={16} className={isActive ? 'text-sky-400' : 'text-slate-400'} />
-                {!collapsed && <span>{item.label}</span>}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Icon size={16} color={isActive ? '#ffffff' : 'var(--text-secondary)'} />
+                  <span>{item.label}</span>
+                </div>
+                {isActive && <ChevronRight size={14} color="#ffffff" />}
               </button>
             );
           })}
+        </nav>
+      </div>
 
-          {/* Collapsible Analyses Accordion */}
-          <div className="pt-1">
-            <button
-              onClick={() => setAnalysesOpen(!analysesOpen)}
-              className="w-full flex items-center justify-between px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#0f1a2c] rounded-md font-medium"
-            >
-              <div className="flex items-center gap-3">
-                <FileText size={16} className="text-sky-400" />
-                {!collapsed && <span className="text-white font-semibold">Analyses</span>}
-              </div>
-              {!collapsed && (
-                analysesOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />
-              )}
-            </button>
-
-            {analysesOpen && !collapsed && (
-              <div className="pl-9 pr-2 py-1 space-y-1 border-l border-[#1b2a40] ml-5 my-1">
-                {analysesSubItems.map((sub) => (
-                  <button
-                    key={sub.id}
-                    onClick={() => {
-                      if (sub.id === 'reports') setActiveTab('search');
-                      else setActiveTab('explorer');
-                    }}
-                    className={`w-full text-left py-1.5 px-2.5 rounded text-xs transition-colors ${
-                      sub.active
-                        ? 'text-sky-400 bg-sky-950/40 font-semibold'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-[#0f1a2c]'
-                    }`}
-                  >
-                    {sub.label}
-                  </button>
-                ))}
-              </div>
-            )}
+      {/* Footer User Info */}
+      <div style={{ padding: '12px', borderTop: '1px solid var(--opencti-border)', backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 10px', borderRadius: '6px', backgroundColor: 'var(--opencti-card)', border: '1px solid var(--opencti-border)' }}>
+          <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#1e2842', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#38bdf8' }}>
+            <User size={15} />
           </div>
-
-          {/* Bottom Nav Items */}
-          <div className="pt-1 space-y-0.5">
-            {bottomNavItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-md font-medium transition-colors ${
-                    isActive
-                      ? 'bg-[#122035] text-white font-semibold border-l-2 border-sky-400'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-[#0f1a2c]'
-                  }`}
-                  title={collapsed ? item.label : undefined}
-                >
-                  <Icon size={16} className={isActive ? 'text-sky-400' : 'text-slate-400'} />
-                  {!collapsed && <span>{item.label}</span>}
-                </button>
-              );
-            })}
+          <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 }}>
+            <span style={{ fontSize: '11px', fontWeight: 600, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Analyst Console</span>
+            <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>SecOps Workspace</span>
           </div>
-
         </div>
       </div>
-
-      {/* Collapse Toggle Footer */}
-      <div className="p-2 border-t border-[#1b2a40]">
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="w-full flex items-center justify-center gap-2 py-2 px-3 text-slate-400 hover:text-slate-200 hover:bg-[#0f1a2c] rounded-md transition-colors text-xs"
-        >
-          <ChevronLeft size={16} className={`transition-transform ${collapsed ? 'rotate-180' : ''}`} />
-          {!collapsed && <span>Collapse</span>}
-        </button>
-      </div>
-
     </aside>
   );
 }
