@@ -2,22 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../api/client';
 import GraphCanvas from '../components/GraphCanvas';
 import { 
-  Network, 
   Search, 
-  Info, 
-  Filter, 
+  Layers, 
   Maximize2, 
+  Calendar, 
   Plus, 
   Edit3, 
-  Eye, 
-  EyeOff, 
   Link as LinkIcon, 
-  Calendar, 
-  Box, 
-  Layers, 
-  ExternalLink,
-  ChevronDown,
-  X
+  ExternalLink, 
+  ChevronDown, 
+  X,
+  Filter
 } from 'lucide-react';
 
 export default function GraphExplorer() {
@@ -26,7 +21,6 @@ export default function GraphExplorer() {
   const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
   const [selectedNode, setSelectedNode] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [is3D, setIs3D] = useState(false);
 
   const fetchGraph = (targetId) => {
     if (!targetId) return;
@@ -35,7 +29,6 @@ export default function GraphExplorer() {
       .then((data) => {
         setGraphData(data);
         setLoading(false);
-        // Default select first node if available
         if (data?.nodes?.length > 0 && !selectedNode) {
           setSelectedNode(data.nodes[0]);
         }
@@ -52,53 +45,99 @@ export default function GraphExplorer() {
 
   const subtabs = ['Overview', 'Knowledge', 'Content', 'Entities', 'Observables', 'Data'];
 
+  const legendItems = [
+    { label: 'Threat Actor', color: '#f59e0b' },
+    { label: 'Malware', color: '#ef4444' },
+    { label: 'CVE Exploit', color: '#f97316' },
+    { label: 'IP Address', color: '#10b981' },
+    { label: 'Domain', color: '#0284c7' },
+    { label: 'IOC Hash', color: '#64748b' }
+  ];
+
   return (
-    <div className="flex flex-col h-[calc(100vh-110px)] bg-[#070d19] overflow-hidden">
+    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 120px)', backgroundColor: 'var(--opencti-bg)', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--opencti-border)' }}>
       
-      {/* Horizontal Sub-Navigation Tab Bar */}
-      <div className="px-6 border-b border-[#1b2a40] bg-[#09101d] flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {subtabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveSubtab(tab)}
-              className={`opencti-subtab ${activeSubtab === tab ? 'opencti-subtab-active' : ''}`}
-            >
-              {tab}
-            </button>
-          ))}
+      {/* Sub-navigation Tab Bar */}
+      <div style={{ backgroundColor: 'var(--opencti-header)', borderBottom: '1px solid var(--opencti-border)', padding: '0 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          {subtabs.map((tab) => {
+            const isActive = activeSubtab === tab;
+            return (
+              <button
+                key={tab}
+                onClick={() => setActiveSubtab(tab)}
+                style={{
+                  padding: '12px 16px',
+                  fontSize: '12px',
+                  fontWeight: isActive ? 600 : 500,
+                  color: isActive ? '#ffffff' : 'var(--text-secondary)',
+                  border: 'none',
+                  borderBottom: isActive ? '2px solid #00b4d8' : '2px solid transparent',
+                  backgroundColor: 'transparent',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                {tab}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Quick Graph Search Input */}
-        <div className="flex items-center gap-2 py-2">
-          <div className="relative">
-            <Search size={13} className="absolute left-2.5 top-2.5 text-slate-400" />
+        {/* Quick Query Input */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <Search size={13} color="var(--text-secondary)" style={{ position: 'absolute', left: '10px' }} />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search graph entity..."
               onKeyDown={(e) => e.key === 'Enter' && fetchGraph(searchTerm)}
-              className="opencti-input text-xs pl-8 py-1 w-56"
+              style={{
+                backgroundColor: '#050912',
+                border: '1px solid var(--opencti-border)',
+                borderRadius: '4px',
+                padding: '5px 10px 5px 30px',
+                color: '#ffffff',
+                fontSize: '12px',
+                outline: 'none',
+                width: '220px'
+              }}
             />
           </div>
           <button 
             onClick={() => fetchGraph(searchTerm)}
-            className="opencti-btn-primary px-3 py-1 rounded text-xs"
+            className="cta-btn cta-btn-primary"
+            style={{ fontSize: '11px', padding: '5px 12px' }}
           >
             Query
           </button>
         </div>
       </div>
 
-      {/* Main Investigation Workspace (Canvas + Right Inspector Drawer) */}
-      <div className="flex-1 relative flex overflow-hidden">
+      {/* Main Investigation Workspace */}
+      <div style={{ flex: 1, display: 'flex', position: 'relative', minHeight: 0 }}>
         
-        {/* Full-bleed Graph Canvas Container */}
-        <div className="flex-1 relative bg-[#070d19] flex flex-col">
+        {/* Central Graph Canvas */}
+        <div style={{ flex: 1, position: 'relative', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--opencti-bg)' }}>
+          
+          {/* Legend Banner */}
+          <div style={{ position: 'absolute', top: '12px', left: '16px', zIndex: 20, backgroundColor: 'rgba(11, 17, 30, 0.85)', padding: '6px 12px', borderRadius: '6px', border: '1px solid var(--opencti-border)', display: 'flex', alignItems: 'center', gap: '14px', backdropFilter: 'blur(6px)' }}>
+            <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <Filter size={12} /> Legend:
+            </span>
+            {legendItems.map((item, idx) => (
+              <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', color: '#ffffff' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: item.color }} />
+                <span>{item.label}</span>
+              </div>
+            ))}
+          </div>
+
           {loading ? (
-            <div className="flex-1 flex items-center justify-center text-slate-400 font-mono text-xs">
-              Querying OpenCTI Knowledge Graph Topology...
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>
+              Querying Neo4j Aura Graph Topology...
             </div>
           ) : (
             <GraphCanvas
@@ -107,125 +146,99 @@ export default function GraphExplorer() {
             />
           )}
 
-          {/* Bottom Floating Control Toolbar */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 graph-toolbar px-3 py-1.5 flex items-center gap-3 text-xs text-slate-300 z-20">
-            <button 
-              onClick={() => setIs3D(!is3D)}
-              className={`px-2 py-1 rounded text-xs font-mono font-bold transition-colors ${is3D ? 'bg-sky-600 text-white' : 'hover:bg-white/[0.08] text-slate-300'}`}
-            >
-              3D
-            </button>
-            <div className="h-4 w-px bg-[#1b2a40]" />
-            <button className="p-1 rounded hover:bg-white/[0.08] text-slate-300" title="Layout Mode">
-              <Layers size={15} />
-            </button>
-            <button className="p-1 rounded hover:bg-white/[0.08] text-slate-300" title="Zoom to Fit">
-              <Maximize2 size={15} />
-            </button>
-            <button className="p-1 rounded hover:bg-white/[0.08] text-slate-300" title="Date Range">
-              <Calendar size={15} />
-            </button>
-            <div className="h-4 w-px bg-[#1b2a40]" />
+          {/* Bottom Floating Control Bar */}
+          <div style={{ position: 'absolute', bottom: '16px', left: '50%', transform: 'translateX(-50%)', backgroundColor: 'rgba(11, 17, 30, 0.95)', border: '1px solid var(--opencti-border)', padding: '6px 14px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '12px', zIndex: 20, backdropFilter: 'blur(8px)', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
+            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: '#38bdf8', padding: '2px 6px', borderRadius: '3px', backgroundColor: 'rgba(2, 132, 199, 0.2)', border: '1px solid rgba(2, 132, 199, 0.4)' }}>2D</span>
+            <div style={{ width: '1px', height: '14px', backgroundColor: 'var(--opencti-border)' }} />
+            <Layers size={14} color="var(--text-secondary)" style={{ cursor: 'pointer' }} />
+            <Maximize2 size={14} color="var(--text-secondary)" style={{ cursor: 'pointer' }} />
+            <Calendar size={14} color="var(--text-secondary)" style={{ cursor: 'pointer' }} />
+            <div style={{ width: '1px', height: '14px', backgroundColor: 'var(--opencti-border)' }} />
             
-            {/* Search within results */}
-            <div className="relative flex items-center">
-              <Search size={13} className="absolute left-2 text-slate-400" />
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <Search size={12} color="var(--text-muted)" style={{ position: 'absolute', left: '6px' }} />
               <input
                 type="text"
-                placeholder="Search these results..."
-                className="bg-[#060b14] border border-[#1b2a40] rounded text-[11px] pl-7 pr-2 py-0.5 w-44 text-slate-200 outline-none focus:border-sky-500"
+                placeholder="Search results..."
+                style={{ backgroundColor: '#050912', border: '1px solid var(--opencti-border)', borderRadius: '4px', padding: '3px 6px 3px 22px', fontSize: '11px', color: '#ffffff', outline: 'none', width: '140px' }}
               />
             </div>
 
-            <div className="h-4 w-px bg-[#1b2a40]" />
-            <button className="p-1 rounded hover:bg-white/[0.08] text-slate-300" title="Add Object">
-              <Plus size={15} />
-            </button>
-            <button className="p-1 rounded hover:bg-white/[0.08] text-slate-300" title="Edit">
-              <Edit3 size={15} />
-            </button>
-            <button className="p-1 rounded hover:bg-white/[0.08] text-slate-300" title="Connect Links">
-              <LinkIcon size={15} />
-            </button>
+            <div style={{ width: '1px', height: '14px', backgroundColor: 'var(--opencti-border)' }} />
+            <Plus size={14} color="var(--text-secondary)" style={{ cursor: 'pointer' }} />
+            <Edit3 size={14} color="var(--text-secondary)" style={{ cursor: 'pointer' }} />
+            <LinkIcon size={14} color="var(--text-secondary)" style={{ cursor: 'pointer' }} />
           </div>
         </div>
 
         {/* Right Selected Object Inspector Drawer */}
         {selectedNode && (
-          <div className="w-80 bg-[#0c1626] border-l border-[#1b2a40] p-4 flex flex-col justify-between overflow-y-auto text-xs font-sans z-30">
-            <div>
+          <div style={{ width: '320px', backgroundColor: 'var(--opencti-sidebar)', borderLeft: '1px solid var(--opencti-border)', padding: '16px', display: 'flex', flexDirection: 'column', justifyBetween: 'space-between', overflowY: 'auto', zIndex: 30 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              
               {/* Inspector Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-[#1b2a40]">
-                <span className="text-[11px] font-mono text-slate-400">1 Objects Selected</span>
-                <div className="flex items-center gap-1">
-                  <button className="p-1 text-slate-400 hover:text-slate-200">
-                    <ExternalLink size={14} />
-                  </button>
-                  <button 
-                    onClick={() => setSelectedNode(null)}
-                    className="p-1 text-slate-400 hover:text-slate-200"
-                  >
-                    <X size={14} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--opencti-border)', paddingBottom: '10px' }}>
+                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>1 Objects Selected</span>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <button onClick={() => setSelectedNode(null)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+                    <X size={15} />
                   </button>
                 </div>
               </div>
 
               {/* Object Dropdown Selector */}
-              <div className="mt-3">
-                <label className="text-[11px] text-slate-400 font-medium">Object</label>
-                <div className="mt-1 p-2 rounded bg-[#060b14] border border-[#1b2a40] text-slate-200 font-mono text-xs flex items-center justify-between">
-                  <span className="truncate">[{selectedNode.id || 'T1049'}] {selectedNode.label}</span>
-                  <ChevronDown size={14} className="text-slate-400" />
+              <div>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>Object</span>
+                <div style={{ marginTop: '4px', padding: '8px 10px', borderRadius: '4px', backgroundColor: '#050912', border: '1px solid var(--opencti-border)', color: '#ffffff', fontSize: '12px', fontFamily: 'var(--font-mono)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>[{selectedNode.id || 'T1049'}] {selectedNode.label}</span>
+                  <ChevronDown size={14} color="var(--text-muted)" />
                 </div>
               </div>
 
               {/* Value Field */}
-              <div className="mt-4">
-                <label className="text-[11px] text-slate-400 font-medium">Value</label>
-                <div className="mt-1 font-mono text-xs text-slate-100 break-all font-semibold">
+              <div>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>Value</span>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: '#38bdf8', fontFamily: 'var(--font-mono)', marginTop: '4px', wordBreak: 'break-all' }}>
                   [{selectedNode.id || 'T1049'}] {selectedNode.label}
                 </div>
               </div>
 
-              {/* Type Badge Chip */}
-              <div className="mt-4">
-                <label className="text-[11px] text-slate-400 font-medium">Type</label>
-                <div className="mt-1">
-                  <span className="inline-block px-2.5 py-0.5 rounded text-xs font-semibold bg-emerald-950/80 text-emerald-400 border border-emerald-800/50">
-                    {selectedNode.type === 'THREAT_ACTOR' ? 'Threat Actor' : selectedNode.type === 'MALWARE' ? 'Malware' : selectedNode.type === 'CVE' ? 'Vulnerability' : 'Attack Pattern'}
+              {/* Type Chip */}
+              <div>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>Type</span>
+                <div style={{ marginTop: '4px' }}>
+                  <span className="badge-success">
+                    {selectedNode.type === 'THREAT_ACTOR' ? 'Threat Actor' : selectedNode.type === 'MALWARE' ? 'Malware Strain' : selectedNode.type === 'CVE' ? 'Vulnerability' : selectedNode.type}
                   </span>
                 </div>
               </div>
 
-              {/* Creation Date */}
-              <div className="mt-4">
-                <label className="text-[11px] text-slate-400 font-medium">Platform Creation Date</label>
-                <div className="mt-1 font-mono text-xs text-slate-300">
+              {/* Platform Creation Date */}
+              <div>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>Platform Creation Date</span>
+                <div style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--text-primary)', marginTop: '2px' }}>
                   July 1, 2025 at 2:58:49 AM
                 </div>
               </div>
 
               {/* Description Block */}
-              <div className="mt-4 pt-3 border-t border-[#1b2a40]">
-                <label className="text-[11px] text-slate-400 font-medium flex items-center justify-between">
-                  <span>Description</span>
-                  <ChevronDown size={13} className="text-slate-400" />
-                </label>
-                <p className="mt-2 text-xs text-slate-300 leading-relaxed font-sans bg-[#060b14]/60 p-2.5 rounded border border-[#1b2a40]/60">
+              <div style={{ borderTop: '1px solid var(--opencti-border)', paddingTop: '12px' }}>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>Description</span>
+                <div style={{ marginTop: '6px', fontSize: '12px', color: 'var(--text-secondary)', backgroundColor: '#050912', padding: '10px', borderRadius: '6px', border: '1px solid var(--opencti-border)', lineHeight: 1.6 }}>
                   Adversaries may attempt to get a listing of network connections to or from the compromised system they are currently accessing or from remote systems by querying for information over the network.
-                  <br /><br />
-                  An adversary who gains access to a system that is part of a cloud-based environment may map out Virtual Private Clouds or Virtual Networks in order to determine what systems and services are connected.
-                </p>
+                </div>
               </div>
+
             </div>
 
-            {/* Bottom Actions */}
-            <div className="pt-3 border-t border-[#1b2a40]">
+            {/* Expand Action Button */}
+            <div style={{ marginTop: '20px', paddingTop: '12px', borderTop: '1px solid var(--opencti-border)' }}>
               <button 
                 onClick={() => fetchGraph(selectedNode.label)}
-                className="w-full py-2 rounded bg-sky-600 hover:bg-sky-500 text-white font-medium text-xs transition-colors shadow-2xs"
+                className="cta-btn cta-btn-primary"
+                style={{ width: '100%', justifyContent: 'center' }}
               >
-                Expand Subgraph Relationships
+                Expand Subgraph Topology
               </button>
             </div>
 
