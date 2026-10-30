@@ -4,7 +4,12 @@ import os
 import sys
 from pathlib import Path
 from typing import Optional
-import torch
+try:
+    import torch
+    TORCH_AVAILABLE = True
+except ImportError:
+    torch = None
+    TORCH_AVAILABLE = False
 
 # Add project root to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -105,6 +110,15 @@ class NERService:
     def init_model(self, model_path: Optional[str] = None):
         path_str = model_path or os.getenv("NER_MODEL_PATH", "ml/models/xlm-roberta-cti-ner")
         path = Path(path_str)
+
+        if not TORCH_AVAILABLE:
+            logger.warning(
+                f"[NER WARNING] PyTorch is not available in this environment. "
+                f"Falling back to contextual_extraction_mode='keyword_list_only'."
+            )
+            self.model_loaded = False
+            self.contextual_extraction_mode = "keyword_list_only"
+            return
 
         # Check if model directory and weights binary exist
         weights_exist = False

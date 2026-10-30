@@ -1,0 +1,10 @@
+ml/models/
+node_modules/
+frontend/node_modules/
+.pytest_cache/
+__pycache__/
+*.pyc
+.env
+.git
+.github
+dist/
