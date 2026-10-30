@@ -16,6 +16,7 @@ class Neo4jService:
         self.password = password or os.getenv("NEO4J_PASSWORD", "demo_password")
         self._driver: Optional[Driver] = None
         self._in_memory_store = {"nodes": {}, "edges": []}
+        self._seed_default_graph()
 
     def get_driver(self) -> Optional[Driver]:
         if self._driver is None and self.uri and self.password != "demo_password":
@@ -151,9 +152,18 @@ class Neo4jService:
         # Return session graph state
         target_nodes = []
         target_edges = []
-        for nid, node in self._in_memory_store["nodes"].items():
-            if entity_id.lower() in node["label"].lower() or entity_id.lower() in nid.lower():
-                target_nodes.append(node)
+        clean_id = entity_id.strip().lower()
+
+        if clean_id in ["all", "*", "latest", ""]:
+            target_nodes = list(self._in_memory_store["nodes"].values())[:60]
+        else:
+            for nid, node in self._in_memory_store["nodes"].items():
+                if clean_id in node["label"].lower() or clean_id in nid.lower():
+                    target_nodes.append(node)
+
+        # If specific search term didn't match, fallback to returning available graph nodes
+        if not target_nodes and self._in_memory_store["nodes"]:
+            target_nodes = list(self._in_memory_store["nodes"].values())[:60]
 
         node_ids = {n["id"] for n in target_nodes}
         for edge in self._in_memory_store["edges"]:
@@ -168,6 +178,46 @@ class Neo4jService:
         # Deduplicate nodes
         unique_nodes = {n["id"]: n for n in target_nodes}.values()
         return {"nodes": list(unique_nodes), "edges": target_edges}
+
+    def _seed_default_graph(self):
+        seed_data = [
+            {
+                "report_id": "RPT-2026-001",
+                "text": "Threat actor APT28 deployed Cobalt Strike to compromise financial sector systems by exploiting CVE-2023-38831 via IP 192.168.1.50 and domain darknet-malware.com.",
+                "language_analysis": {"primary_language": "en", "is_code_mixed": False},
+                "entities": [
+                    {"entity": "APT28", "type": "THREAT_ACTOR", "confidence": 0.95, "source": "keyword_list"},
+                    {"entity": "Cobalt Strike", "type": "MALWARE", "confidence": 0.94, "source": "keyword_list"},
+                    {"entity": "CVE-2023-38831", "type": "CVE", "confidence": 1.0, "source": "regex"},
+                    {"entity": "192.168.1.50", "type": "IP", "confidence": 1.0, "source": "regex"},
+                    {"entity": "darknet-malware.com", "type": "DOMAIN", "confidence": 1.0, "source": "regex"}
+                ],
+                "relations": [
+                    {"source": "APT28", "source_type": "THREAT_ACTOR", "relation": "USES", "target": "Cobalt Strike", "target_type": "MALWARE", "confidence": 0.95},
+                    {"source": "Cobalt Strike", "source_type": "MALWARE", "relation": "EXPLOITS", "target": "CVE-2023-38831", "target_type": "CVE", "confidence": 0.96},
+                    {"source": "Cobalt Strike", "source_type": "MALWARE", "relation": "COMMUNICATES_WITH", "target": "192.168.1.50", "target_type": "IP", "confidence": 0.97},
+                    {"source": "Cobalt Strike", "source_type": "MALWARE", "relation": "COMMUNICATES_WITH", "target": "darknet-malware.com", "target_type": "DOMAIN", "confidence": 0.96}
+                ]
+            },
+            {
+                "report_id": "RPT-2026-002",
+                "text": "El grupo Lazarus utilizó el malware RedLine Stealer para infectar servidores usando la vulnerabilidad CVE-2021-44228 y contactar 10.0.0.15.",
+                "language_analysis": {"primary_language": "es", "is_code_mixed": False},
+                "entities": [
+                    {"entity": "Lazarus", "type": "THREAT_ACTOR", "confidence": 0.94, "source": "keyword_list"},
+                    {"entity": "RedLine Stealer", "type": "MALWARE", "confidence": 0.92, "source": "keyword_list"},
+                    {"entity": "CVE-2021-44228", "type": "CVE", "confidence": 1.0, "source": "regex"},
+                    {"entity": "10.0.0.15", "type": "IP", "confidence": 1.0, "source": "regex"}
+                ],
+                "relations": [
+                    {"source": "Lazarus", "source_type": "THREAT_ACTOR", "relation": "USES", "target": "RedLine Stealer", "target_type": "MALWARE", "confidence": 0.94},
+                    {"source": "RedLine Stealer", "source_type": "MALWARE", "relation": "EXPLOITS", "target": "CVE-2021-44228", "target_type": "CVE", "confidence": 0.95},
+                    {"source": "RedLine Stealer", "source_type": "MALWARE", "relation": "COMMUNICATES_WITH", "target": "10.0.0.15", "target_type": "IP", "confidence": 0.96}
+                ]
+            }
+        ]
+        for report in seed_data:
+            self.upsert_report_and_graph(report)
 
     def get_campaign_clusters(self) -> List[Dict[str, Any]]:
         """

@@ -48,7 +48,7 @@ export default function GraphCanvas({ graphData, onNodeClick }) {
   }, [graphData]);
 
   return (
-    <div style={{ width: '100%', height: '520px', backgroundColor: '#090d16', borderRadius: '8px', overflow: 'hidden', border: '1px solid #334155', position: 'relative' }}>
+    <div style={{ width: '100%', height: '520px', backgroundColor: '#ffffff', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--opencti-border)', position: 'relative' }}>
       {formattedData.nodes.length === 0 ? (
         <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#64748b', fontSize: '14px' }}>
           Select an entity or submit a report to render graph topology.
@@ -59,7 +59,7 @@ export default function GraphCanvas({ graphData, onNodeClick }) {
           graphData={formattedData}
           nodeRelSize={7}
           nodeColor={(node) => node.color}
-          linkColor={() => '#475569'}
+          linkColor={() => '#cbd5e1'}
           linkWidth={1.5}
           linkDirectionalArrowLength={6}
           linkDirectionalArrowRelPos={1}
@@ -77,7 +77,7 @@ export default function GraphCanvas({ graphData, onNodeClick }) {
             ctx.fillStyle = node.color;
             ctx.fill();
             ctx.lineWidth = 1.5 / globalScale;
-            ctx.strokeStyle = '#0f172a';
+            ctx.strokeStyle = '#ffffff';
             ctx.stroke();
 
             // Node Label Text
@@ -87,11 +87,15 @@ export default function GraphCanvas({ graphData, onNodeClick }) {
 
             // Background pill for contrast
             const textWidth = ctx.measureText(label).width;
-            const pad = 2 / globalScale;
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+            const pad = 3 / globalScale;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
             ctx.fillRect(node.x - textWidth / 2 - pad, node.y + radius + 2, textWidth + pad * 2, fontSize + pad);
 
-            ctx.fillStyle = '#f8fafc';
+            ctx.lineWidth = 0.5 / globalScale;
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.strokeRect(node.x - textWidth / 2 - pad, node.y + radius + 2, textWidth + pad * 2, fontSize + pad);
+
+            ctx.fillStyle = '#0f172a';
             ctx.fillText(label, node.x, node.y + radius + 3);
           }}
           nodeCanvasObjectMode={() => 'replace'}
@@ -105,16 +109,20 @@ export default function GraphCanvas({ graphData, onNodeClick }) {
             const midX = (link.source.x + link.target.x) / 2;
             const midY = (link.source.y + link.target.y) / 2;
 
-            ctx.font = `500 ${fontSize}px system-ui, -apple-system, sans-serif`;
+            ctx.font = `600 ${fontSize}px system-ui, -apple-system, sans-serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
             const textWidth = ctx.measureText(label).width;
             const pad = 2 / globalScale;
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
             ctx.fillRect(midX - textWidth / 2 - pad, midY - fontSize / 2 - pad, textWidth + pad * 2, fontSize + pad * 2);
 
-            ctx.fillStyle = '#38bdf8';
+            ctx.lineWidth = 0.5 / globalScale;
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.strokeRect(midX - textWidth / 2 - pad, midY - fontSize / 2 - pad, textWidth + pad * 2, fontSize + pad * 2);
+
+            ctx.fillStyle = '#0284c7';
             ctx.fillText(label, midX, midY);
           }}
           linkCanvasObjectMode={() => 'after'}

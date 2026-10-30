@@ -122,10 +122,10 @@ export default function Dashboard({ onNavigate }) {
   const totalEntitiesCount = entities.length || 1;
   const distributionData = [
     { type: 'Threat Actors', key: 'THREAT_ACTOR', color: '#0284c7', count: typeCounts['THREAT_ACTOR'] || 0 },
-    { type: 'Malware Strains', key: 'MALWARE', color: '#ef4444', count: typeCounts['MALWARE'] || 0 },
-    { type: 'CVE Vulnerabilities', key: 'CVE', color: '#f97316', count: typeCounts['CVE'] || 0 },
-    { type: 'IP Addresses', key: 'IP', color: '#10b981', count: typeCounts['IP'] || 0 },
-    { type: 'Domains', key: 'DOMAIN', color: '#8b5cf6', count: typeCounts['DOMAIN'] || 0 },
+    { type: 'Malware Strains', key: 'MALWARE', color: '#dc2626', count: typeCounts['MALWARE'] || 0 },
+    { type: 'CVE Vulnerabilities', key: 'CVE', color: '#ea580c', count: typeCounts['CVE'] || 0 },
+    { type: 'IP Addresses', key: 'IP', color: '#16a34a', count: typeCounts['IP'] || 0 },
+    { type: 'Domains', key: 'DOMAIN', color: '#7c3aed', count: typeCounts['DOMAIN'] || 0 },
     { type: 'IOC Hashes', key: 'IOC', color: '#64748b', count: typeCounts['IOC'] || 0 }
   ];
 
@@ -144,7 +144,7 @@ export default function Dashboard({ onNavigate }) {
           <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>
             CyberGraph-X / Threat Intelligence Overview
           </div>
-          <h1 style={{ margin: '2px 0 0 0', fontSize: '20px', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.3px' }}>
+          <h1 style={{ margin: '2px 0 0 0', fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.3px' }}>
             Operational Knowledge Overview
           </h1>
         </div>
@@ -167,7 +167,7 @@ export default function Dashboard({ onNavigate }) {
             </button>
 
             {showPresetsMenu && (
-              <div style={{ position: 'absolute', right: 0, marginTop: '6px', width: '240px', backgroundColor: 'var(--opencti-card)', border: '1px solid var(--opencti-border)', borderRadius: '8px', zIndex: 50, padding: '4px 0', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
+              <div style={{ position: 'absolute', right: 0, marginTop: '6px', width: '240px', backgroundColor: 'var(--opencti-card)', border: '1px solid var(--opencti-border)', borderRadius: '8px', zIndex: 50, padding: '4px 0', boxShadow: '0 10px 25px rgba(0,0,0,0.15)' }}>
                 <div style={{ padding: '6px 12px', fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', textTransform: 'uppercase', borderBottom: '1px solid var(--opencti-border)' }}>
                   1-Click Advisory Ingestion
                 </div>
@@ -176,11 +176,11 @@ export default function Dashboard({ onNavigate }) {
                     key={idx}
                     onClick={() => handleIngestPreset(sample)}
                     style={{ width: '100%', textAlign: 'left', padding: '8px 12px', fontSize: '12px', color: 'var(--text-primary)', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--opencti-card-hover)'}
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
                     <span>{sample.name}</span>
-                    <span style={{ fontSize: '10px', color: '#38bdf8', fontFamily: 'var(--font-mono)' }}>Ingest →</span>
+                    <span style={{ fontSize: '10px', color: '#0284c7', fontFamily: 'var(--font-mono)' }}>Ingest →</span>
                   </button>
                 ))}
               </div>
@@ -195,7 +195,7 @@ export default function Dashboard({ onNavigate }) {
       </div>
 
       {statusMessage && (
-        <div style={{ backgroundColor: 'rgba(2, 132, 199, 0.1)', border: '1px solid rgba(2, 132, 199, 0.3)', padding: '10px 14px', borderRadius: '6px', color: '#38bdf8', fontSize: '12px', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ backgroundColor: '#e0f2fe', border: '1px solid #bae6fd', padding: '10px 14px', borderRadius: '6px', color: '#0284c7', fontSize: '12px', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Sparkles size={14} className="animate-pulse" />
           <span>{statusMessage}</span>
         </div>
@@ -211,8 +211,8 @@ export default function Dashboard({ onNavigate }) {
             <Database size={16} color="var(--text-muted)" />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '8px' }}>
-            <span style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#ffffff' }}>{entities.length}</span>
-            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: '#34d399', fontWeight: 600 }}>+18.4%</span>
+            <span style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>{entities.length}</span>
+            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: '#16a34a', fontWeight: 600 }}>+18.4%</span>
           </div>
           <span style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>Live Ingested Entities</span>
         </div>
@@ -224,8 +224,8 @@ export default function Dashboard({ onNavigate }) {
             <Flame size={16} color="var(--text-muted)" />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '8px' }}>
-            <span style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#ffffff' }}>{typeCounts['THREAT_ACTOR'] || 0}</span>
-            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: '#fb923c', fontWeight: 600 }}>+4 active</span>
+            <span style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>{typeCounts['THREAT_ACTOR'] || 0}</span>
+            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: '#ea580c', fontWeight: 600 }}>+4 active</span>
           </div>
           <span style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>Tracked APT Groups</span>
         </div>
@@ -237,8 +237,8 @@ export default function Dashboard({ onNavigate }) {
             <Bug size={16} color="var(--text-muted)" />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '8px' }}>
-            <span style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#ffffff' }}>{typeCounts['MALWARE'] || 0}</span>
-            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: '#f87171', fontWeight: 600 }}>+2 this week</span>
+            <span style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>{typeCounts['MALWARE'] || 0}</span>
+            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: '#dc2626', fontWeight: 600 }}>+2 this week</span>
           </div>
           <span style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>Strains & Trojans</span>
         </div>
@@ -250,8 +250,8 @@ export default function Dashboard({ onNavigate }) {
             <ShieldAlert size={16} color="var(--text-muted)" />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '8px' }}>
-            <span style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#ffffff' }}>{typeCounts['CVE'] || 0}</span>
-            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: '#facc15', fontWeight: 600 }}>+6 critical</span>
+            <span style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>{typeCounts['CVE'] || 0}</span>
+            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: '#d97706', fontWeight: 600 }}>+6 critical</span>
           </div>
           <span style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>Vulnerabilities</span>
         </div>
@@ -263,7 +263,7 @@ export default function Dashboard({ onNavigate }) {
             <Share2 size={16} color="var(--text-muted)" />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '8px' }}>
-            <span style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#ffffff' }}>{campaigns.length}</span>
+            <span style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>{campaigns.length}</span>
             <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', fontWeight: 600 }}>Stable</span>
           </div>
           <span style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>Correlated Subgraphs</span>
@@ -284,13 +284,13 @@ export default function Dashboard({ onNavigate }) {
                 <div className="panel-title">Entity Type Distribution & Volume Share</div>
                 <div className="panel-subtitle">Extracted STIX 2.1 entities mapped in Neo4j graph database</div>
               </div>
-              <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)', backgroundColor: 'rgba(0,0,0,0.3)', padding: '2px 8px', borderRadius: '4px', border: '1px solid var(--opencti-border)' }}>
+              <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)', backgroundColor: '#f8fafc', padding: '2px 8px', borderRadius: '4px', border: '1px solid var(--opencti-border)' }}>
                 {entities.length} Total Nodes
               </span>
             </div>
 
             {/* Aggregated Horizontal Stacked Bar */}
-            <div style={{ height: '12px', width: '100%', backgroundColor: '#050912', borderRadius: '4px', overflow: 'hidden', display: 'flex', border: '1px solid var(--opencti-border)', margin: '8px 0 16px 0' }}>
+            <div style={{ height: '12px', width: '100%', backgroundColor: '#f1f5f9', borderRadius: '4px', overflow: 'hidden', display: 'flex', border: '1px solid var(--opencti-border)', margin: '8px 0 16px 0' }}>
               {distributionData.map((item, idx) => {
                 const pct = (item.count / totalEntitiesCount) * 100;
                 if (pct === 0) return null;
@@ -309,12 +309,12 @@ export default function Dashboard({ onNavigate }) {
               {distributionData.map((item, idx) => {
                 const pct = Math.round((item.count / totalEntitiesCount) * 100);
                 return (
-                  <div key={idx} style={{ padding: '8px 12px', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '6px', border: '1px solid var(--opencti-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                  <div key={idx} style={{ padding: '8px 12px', backgroundColor: '#f8fafc', borderRadius: '6px', border: '1px solid var(--opencti-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: item.color }} />
                       <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>{item.type}</span>
                     </div>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 600, color: '#ffffff' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--text-primary)' }}>
                       {item.count} <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>({pct}%)</span>
                     </span>
                   </div>
@@ -339,10 +339,10 @@ export default function Dashboard({ onNavigate }) {
                     placeholder="Search actors..."
                     value={actorSearch}
                     onChange={(e) => setActorSearch(e.target.value)}
-                    style={{ backgroundColor: '#050912', border: '1px solid var(--opencti-border)', borderRadius: '4px', padding: '4px 8px 4px 26px', color: '#ffffff', fontSize: '11px', outline: 'none', width: '160px' }}
+                    style={{ backgroundColor: '#f8fafc', border: '1px solid var(--opencti-border)', borderRadius: '4px', padding: '4px 8px 4px 26px', color: 'var(--text-primary)', fontSize: '11px', outline: 'none', width: '160px' }}
                   />
                 </div>
-                <button onClick={() => onNavigate && onNavigate('explorer')} style={{ background: 'none', border: 'none', color: '#38bdf8', fontSize: '11px', fontFamily: 'var(--font-mono)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <button onClick={() => onNavigate && onNavigate('explorer')} style={{ background: 'none', border: 'none', color: '#0284c7', fontSize: '11px', fontFamily: 'var(--font-mono)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <span>Explore Graph</span>
                   <ArrowUpRight size={13} />
                 </button>
@@ -363,12 +363,12 @@ export default function Dashboard({ onNavigate }) {
               <tbody>
                 {filteredActors.map((actor, idx) => (
                   <tr key={idx}>
-                    <td style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: '#38bdf8' }}>{actor.name}</td>
+                    <td style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: '#0284c7' }}>{actor.name}</td>
                     <td style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>{actor.aliases}</td>
-                    <td style={{ fontFamily: 'var(--font-mono)', color: '#f87171', fontSize: '11px' }}>{actor.malware}</td>
+                    <td style={{ fontFamily: 'var(--font-mono)', color: '#dc2626', fontSize: '11px' }}>{actor.malware}</td>
                     <td style={{ fontFamily: 'var(--font-mono)', textAlign: 'center' }}>{actor.campaigns}</td>
                     <td style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', fontSize: '11px' }}>{actor.lastSeen}</td>
-                    <td style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', fontWeight: 600, color: '#34d399' }}>{actor.confidence}</td>
+                    <td style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', fontWeight: 600, color: '#16a34a' }}>{actor.confidence}</td>
                   </tr>
                 ))}
               </tbody>
@@ -403,7 +403,7 @@ export default function Dashboard({ onNavigate }) {
           <div className="panel-card">
             <div className="panel-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Cpu size={15} color="#38bdf8" />
+                <Cpu size={15} color="#0284c7" />
                 <div className="panel-title">NLP Pipeline Telemetry</div>
               </div>
               <span className="badge-success">Operational</span>
@@ -411,7 +411,7 @@ export default function Dashboard({ onNavigate }) {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px' }}>
               {pipelineSteps.map((step) => (
-                <div key={step.step} style={{ padding: '8px 10px', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '6px', border: '1px solid var(--opencti-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div key={step.step} style={{ padding: '8px 10px', backgroundColor: '#f8fafc', borderRadius: '6px', border: '1px solid var(--opencti-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>{step.step}</span>
@@ -419,7 +419,7 @@ export default function Dashboard({ onNavigate }) {
                     </div>
                     <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>{step.detail}</div>
                   </div>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#38bdf8', backgroundColor: 'rgba(2, 132, 199, 0.15)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(2, 132, 199, 0.3)' }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#0284c7', backgroundColor: '#e0f2fe', padding: '2px 6px', borderRadius: '4px', border: '1px solid #bae6fd' }}>
                     {step.latency}
                   </span>
                 </div>
@@ -436,13 +436,13 @@ export default function Dashboard({ onNavigate }) {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {languageMatrix.map((lang) => (
-                <div key={lang.code} style={{ padding: '8px 10px', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '6px', border: '1px solid var(--opencti-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                <div key={lang.code} style={{ padding: '8px 10px', backgroundColor: '#f8fafc', borderRadius: '6px', border: '1px solid var(--opencti-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#34d399' }} />
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#16a34a' }} />
                     <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{lang.name}</span>
-                    <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)', backgroundColor: 'rgba(255,255,255,0.05)', padding: '1px 4px', borderRadius: '3px' }}>{lang.code}</span>
+                    <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)', backgroundColor: '#e2e8f0', padding: '1px 4px', borderRadius: '3px' }}>{lang.code}</span>
                   </div>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 600, color: '#ffffff' }}>{lang.accuracy} acc</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--text-primary)' }}>{lang.accuracy} acc</span>
                 </div>
               ))}
             </div>
@@ -452,7 +452,7 @@ export default function Dashboard({ onNavigate }) {
           <div className="panel-card">
             <div className="panel-header">
               <div className="panel-title">Graph Topology Subtree</div>
-              <button onClick={() => onNavigate && onNavigate('explorer')} style={{ background: 'none', border: 'none', color: '#38bdf8', fontSize: '11px', fontFamily: 'var(--font-mono)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <button onClick={() => onNavigate && onNavigate('explorer')} style={{ background: 'none', border: 'none', color: '#0284c7', fontSize: '11px', fontFamily: 'var(--font-mono)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <span>Full Graph</span>
                 <ExternalLink size={12} />
               </button>

@@ -69,9 +69,13 @@ def read_root():
 
 @app.get("/api/v1/health")
 def health_check():
+    from ml.inference import ner_service
+    status_info = ner_service.get_status()
     return {
         "status": "ok",
         "service": "cybergraph-x-backend",
         "version": "1.0.0",
+        "model_loaded": status_info["model_loaded"],
+        "contextual_extraction_mode": status_info["contextual_extraction_mode"],
         "cors_origins": origins
     }

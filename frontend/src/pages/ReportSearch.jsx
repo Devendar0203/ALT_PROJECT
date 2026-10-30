@@ -30,9 +30,9 @@ export default function ReportSearch() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Search Header Card */}
-      <div style={{ backgroundColor: '#1e293b', padding: '24px', borderRadius: '12px', border: '1px solid #334155' }}>
-        <h2 style={{ fontSize: '18px', fontWeight: 'bold', margin: '0 0 6px 0', color: '#f8fafc' }}>Threat Intelligence Search</h2>
-        <p style={{ fontSize: '13px', color: '#94a3b8', margin: '0 0 16px 0' }}>Search across ingested CTI advisories, threat actors, malware families, and indicators</p>
+      <div className="panel-card">
+        <h2 style={{ fontSize: '18px', fontWeight: 'bold', margin: '0 0 6px 0', color: 'var(--text-primary)' }}>Threat Intelligence Search</h2>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '0 0 16px 0' }}>Search across ingested CTI advisories, threat actors, malware families, and indicators</p>
         
         <form onSubmit={handleSearch} style={{ display: 'flex', gap: '12px' }}>
           <input
@@ -42,11 +42,11 @@ export default function ReportSearch() {
             placeholder="Search keywords, threat actors (e.g. Lazarus, APT28), malware, CVEs..."
             style={{
               flex: 1,
-              backgroundColor: '#090d16',
-              border: '1px solid #334155',
+              backgroundColor: '#f8fafc',
+              border: '1px solid var(--opencti-border)',
               borderRadius: '8px',
               padding: '12px 16px',
-              color: '#f8fafc',
+              color: 'var(--text-primary)',
               fontSize: '14px',
               outline: 'none'
             }}
@@ -54,20 +54,8 @@ export default function ReportSearch() {
           <button
             type="submit"
             disabled={loading}
-            style={{
-              backgroundColor: '#0284c7',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '12px 24px',
-              fontWeight: '600',
-              fontSize: '14px',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              transition: 'background-color 0.2s ease'
-            }}
+            className="cta-btn cta-btn-primary"
+            style={{ padding: '12px 24px', fontSize: '14px' }}
           >
             {loading ? <Loader2 size={18} className="animate-spin" /> : <Search size={18} />} Search Intel
           </button>
@@ -76,36 +64,36 @@ export default function ReportSearch() {
 
       {/* Results Container */}
       {loading ? (
-        <div style={{ backgroundColor: '#1e293b', padding: '32px', borderRadius: '12px', border: '1px solid #334155', textAlign: 'center', color: '#94a3b8' }}>
+        <div className="panel-card" style={{ padding: '32px', textAlign: 'center', color: 'var(--text-secondary)' }}>
           Searching CTI graph database...
         </div>
       ) : results ? (
-        <div style={{ backgroundColor: '#1e293b', padding: '24px', borderRadius: '12px', border: '1px solid #334155' }}>
-          <div style={{ fontSize: '14px', color: '#cbd5e1', marginBottom: '20px', fontWeight: '500' }}>
-            Search Results for "<strong style={{ color: '#38bdf8' }}>{results.query}</strong>" — {results.total_matches} matched nodes
+        <div className="panel-card">
+          <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '20px', fontWeight: '500' }}>
+            Search Results for "<strong style={{ color: '#0284c7' }}>{results.query}</strong>" — {results.total_matches} matched nodes
           </div>
 
           {results.total_matches === 0 ? (
             /* Styled Empty State */
-            <div style={{ backgroundColor: '#090d16', padding: '32px', borderRadius: '8px', border: '1px dashed #334155', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-              <AlertCircle size={36} color="#64748b" />
-              <div style={{ fontSize: '16px', fontWeight: '600', color: '#f8fafc' }}>No matches found</div>
-              <div style={{ fontSize: '13px', color: '#94a3b8', maxWidth: '400px' }}>
+            <div style={{ backgroundColor: '#f8fafc', padding: '32px', borderRadius: '8px', border: '1px dashed var(--opencti-border)', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+              <AlertCircle size={36} color="#94a3b8" />
+              <div style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)' }}>No matches found</div>
+              <div style={{ fontSize: '13px', color: 'var(--text-secondary)', maxWidth: '400px' }}>
                 No matching CTI entities found for "{results.query}". Try a different term like "APT28", "Cobalt Strike", "Lazarus", or ingest a report mentioning this entity.
               </div>
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
               {results.results.map((res, idx) => (
-                <div key={idx} style={{ backgroundColor: '#090d16', padding: '16px', borderRadius: '8px', border: '1px solid #334155', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div key={idx} style={{ backgroundColor: '#f8fafc', padding: '16px', borderRadius: '8px', border: '1px solid var(--opencti-border)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <FileText size={18} color="#38bdf8" />
-                    <span style={{ fontWeight: 'bold', color: '#38bdf8', fontSize: '15px' }}>{res.label || res.id}</span>
+                    <FileText size={18} color="#0284c7" />
+                    <span style={{ fontWeight: 'bold', color: 'var(--text-primary)', fontSize: '15px' }}>{res.label || res.id}</span>
                   </div>
                   <div>
                     <EntityBadge type={res.type} text={res.label || res.id} />
                   </div>
-                  <div style={{ fontSize: '12px', color: '#94a3b8', fontFamily: 'monospace' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
                     Node ID: {res.id}
                   </div>
                 </div>

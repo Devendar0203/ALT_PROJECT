@@ -13,7 +13,7 @@ export default function Header({ activeTab, healthStatus, onIngestClick }) {
     <header className="header-container">
       {/* Page Title & Search Bar */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flex: 1 }}>
-        <h1 style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.2px', whiteSpace: 'nowrap' }}>
+        <h1 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.2px', whiteSpace: 'nowrap' }}>
           {pageTitles[activeTab] || 'Threat Intelligence Telemetry'}
         </h1>
 

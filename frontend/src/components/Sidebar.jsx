@@ -60,13 +60,13 @@ export default function Sidebar({ activeTab, setActiveTab }) {
       </div>
 
       {/* Footer User Info */}
-      <div style={{ padding: '12px', borderTop: '1px solid var(--opencti-border)', backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 10px', borderRadius: '6px', backgroundColor: 'var(--opencti-card)', border: '1px solid var(--opencti-border)' }}>
-          <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#1e2842', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#38bdf8' }}>
+      <div style={{ padding: '12px', borderTop: '1px solid var(--opencti-border)', backgroundColor: '#f8fafc' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 10px', borderRadius: '6px', backgroundColor: '#ffffff', border: '1px solid var(--opencti-border)' }}>
+          <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#e0f2fe', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0284c7' }}>
             <User size={15} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 }}>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Analyst Console</span>
+            <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Analyst Console</span>
             <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>SecOps Workspace</span>
           </div>
         </div>

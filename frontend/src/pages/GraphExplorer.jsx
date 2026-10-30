@@ -23,22 +23,29 @@ import {
   Check
 } from 'lucide-react';
 
-export default function GraphExplorer() {
+export default function GraphExplorer({ initialSearch }) {
   const [activeSubtab, setActiveSubtab] = useState('Knowledge');
-  const [searchTerm, setSearchTerm] = useState('Cobalt Strike');
+  const [searchTerm, setSearchTerm] = useState(initialSearch || 'Cobalt Strike');
   const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
   const [selectedNode, setSelectedNode] = useState(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const fetchGraph = (targetId) => {
-    if (!targetId) return;
+    const q = targetId || searchTerm || 'Cobalt Strike';
     setLoading(true);
-    api.getEntityGraph(targetId)
+    api.getEntityGraph(q)
       .then((data) => {
-        setGraphData(data);
+        if (!data?.nodes || data.nodes.length === 0) {
+          // If query didn't return any nodes, load available topology
+          return api.getEntityGraph('ALL');
+        }
+        return data;
+      })
+      .then((data) => {
+        setGraphData(data || { nodes: [], edges: [] });
         setLoading(false);
-        if (data?.nodes?.length > 0 && !selectedNode) {
+        if (data?.nodes?.length > 0) {
           setSelectedNode(data.nodes[0]);
         }
       })
@@ -49,8 +56,10 @@ export default function GraphExplorer() {
   };
 
   useEffect(() => {
-    fetchGraph(searchTerm);
-  }, []);
+    const term = initialSearch || searchTerm;
+    setSearchTerm(term);
+    fetchGraph(term);
+  }, [initialSearch]);
 
   const subtabs = ['Overview', 'Knowledge', 'Content', 'Entities', 'Observables', 'Data'];
 
@@ -70,10 +79,10 @@ export default function GraphExplorer() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 120px)', backgroundColor: 'var(--opencti-bg)', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--opencti-border)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 120px)', backgroundColor: '#ffffff', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--opencti-border)' }}>
       
       {/* Sub-navigation Tab Bar */}
-      <div style={{ backgroundColor: 'var(--opencti-header)', borderBottom: '1px solid var(--opencti-border)', padding: '0 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ backgroundColor: '#ffffff', borderBottom: '1px solid var(--opencti-border)', padding: '0 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
           {subtabs.map((tab) => {
             const isActive = activeSubtab === tab;
@@ -85,9 +94,9 @@ export default function GraphExplorer() {
                   padding: '12px 16px',
                   fontSize: '12px',
                   fontWeight: isActive ? 600 : 500,
-                  color: isActive ? '#ffffff' : 'var(--text-secondary)',
+                  color: isActive ? '#0284c7' : 'var(--text-secondary)',
                   border: 'none',
-                  borderBottom: isActive ? '2px solid #00b4d8' : '2px solid transparent',
+                  borderBottom: isActive ? '2px solid #0284c7' : '2px solid transparent',
                   backgroundColor: 'transparent',
                   cursor: 'pointer',
                   transition: 'all 0.15s ease'
@@ -110,11 +119,11 @@ export default function GraphExplorer() {
               placeholder="Search graph entity..."
               onKeyDown={(e) => e.key === 'Enter' && fetchGraph(searchTerm)}
               style={{
-                backgroundColor: '#050912',
+                backgroundColor: '#f8fafc',
                 border: '1px solid var(--opencti-border)',
                 borderRadius: '4px',
                 padding: '5px 10px 5px 30px',
-                color: '#ffffff',
+                color: 'var(--text-primary)',
                 fontSize: '12px',
                 outline: 'none',
                 width: '220px'
@@ -315,7 +324,7 @@ export default function GraphExplorer() {
                   {/* Description Block */}
                   <div style={{ borderTop: '1px solid var(--opencti-border)', paddingTop: '12px' }}>
                     <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>Description</span>
-                    <div style={{ marginTop: '6px', fontSize: '12px', color: 'var(--text-secondary)', backgroundColor: '#050912', padding: '10px', borderRadius: '6px', border: '1px solid var(--opencti-border)', lineHeight: 1.6 }}>
+                    <div style={{ marginTop: '6px', fontSize: '12px', color: 'var(--text-secondary)', backgroundColor: '#f8fafc', padding: '10px', borderRadius: '6px', border: '1px solid var(--opencti-border)', lineHeight: 1.6 }}>
                       Adversaries may attempt to get a listing of network connections to or from the compromised system they are currently accessing or from remote systems by querying for information over the network.
                     </div>
                   </div>
@@ -346,8 +355,8 @@ export default function GraphExplorer() {
                 <div className="panel-title">Raw CTI Advisory & NLP Highlighted Content</div>
                 <span className="badge-info">XLM-RoBERTa Tagged</span>
               </div>
-              <div style={{ backgroundColor: '#050912', padding: '16px', borderRadius: '6px', border: '1px solid var(--opencti-border)', fontFamily: 'var(--font-mono)', fontSize: '13px', lineHeight: 1.8, color: '#f8fafc' }}>
-                Threat actor <span style={{ backgroundColor: 'rgba(245, 158, 11, 0.2)', color: '#f59e0b', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(245, 158, 11, 0.4)' }}>APT28</span> deployed malware <span style={{ backgroundColor: 'rgba(239, 68, 68, 0.2)', color: '#ef4444', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(239, 68, 68, 0.4)' }}>Cobalt Strike</span> to compromise financial sector infrastructure by exploiting zero-day vulnerability <span style={{ backgroundColor: 'rgba(249, 115, 22, 0.2)', color: '#f97316', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(249, 115, 22, 0.4)' }}>CVE-2023-38831</span> using Command & Control server IP address <span style={{ backgroundColor: 'rgba(16, 185, 129, 0.2)', color: '#10b981', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(16, 185, 129, 0.4)' }}>192.168.1.50</span> and domain <span style={{ backgroundColor: 'rgba(2, 132, 199, 0.2)', color: '#38bdf8', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(2, 132, 199, 0.4)' }}>darknet-malware.com</span>.
+              <div style={{ backgroundColor: '#f8fafc', padding: '16px', borderRadius: '6px', border: '1px solid var(--opencti-border)', fontFamily: 'var(--font-mono)', fontSize: '13px', lineHeight: 1.8, color: 'var(--text-primary)' }}>
+                Threat actor <span style={{ backgroundColor: '#fef3c7', color: '#b45309', padding: '2px 6px', borderRadius: '4px', border: '1px solid #fde68a' }}>APT28</span> deployed malware <span style={{ backgroundColor: '#fee2e2', color: '#b91c1c', padding: '2px 6px', borderRadius: '4px', border: '1px solid #fca5a5' }}>Cobalt Strike</span> to compromise financial sector infrastructure by exploiting zero-day vulnerability <span style={{ backgroundColor: '#fff7ed', color: '#c2410c', padding: '2px 6px', borderRadius: '4px', border: '1px solid #ffedd5' }}>CVE-2023-38831</span> using Command & Control server IP address <span style={{ backgroundColor: '#d1fae5', color: '#047857', padding: '2px 6px', borderRadius: '4px', border: '1px solid #6ee7b7' }}>192.168.1.50</span> and domain <span style={{ backgroundColor: '#e0f2fe', color: '#0369a1', padding: '2px 6px', borderRadius: '4px', border: '1px solid #7dd3fc' }}>darknet-malware.com</span>.
               </div>
             </div>
           </div>
@@ -378,7 +387,7 @@ export default function GraphExplorer() {
                           {node.type}
                         </span>
                       </td>
-                      <td style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: '#ffffff' }}>{node.label}</td>
+                      <td style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--text-primary)' }}>{node.label}</td>
                       <td style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', fontSize: '11px' }}>{node.id}</td>
                       <td style={{ textAlign: 'right' }}>
                         <button 

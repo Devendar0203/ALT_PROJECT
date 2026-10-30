@@ -13,6 +13,7 @@ class EntityItem(BaseModel):
     start: int
     end: int
     confidence: float
+    source: Optional[str] = None
 
 
 class RelationItem(BaseModel):
